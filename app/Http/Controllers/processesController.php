@@ -96,7 +96,9 @@ class processesController extends Controller
         if ($request['process_type'] == 'exit') {
             return $this->exitData($data);
         } else if ($request['process_type'] == 'insert') {
-            return $this->insertData($data);
+
+            $this->insertData($data);
+            return redirect()->route("admin.processes.index")->withSuccess(trans('app.success_store'));
         }
     }
 
@@ -207,7 +209,8 @@ class processesController extends Controller
             'number_kilo'  => $data['number_kilo'],
             'sacks_number' => $data['sacks_number']
         ]);
-        return $this->processCreatedThenSendSmsMsg($process);
+        // dd( $this->processCreatedThenSendSmsMs($process));
+        return $process;
     }
 
     public function checkClientAvailableStock(Request $request)
@@ -292,8 +295,8 @@ class processesController extends Controller
         $data['process'] = processe::with('seasonRelation', 'productRelation', 'typeRelation', 'sacksRelation', 'clientRelation', 'floorRelation', 'warehouseRelation')->first();
         $data['logo'] = setting::where(['key' => 'logo'])->first();
         // return view('admin.processes.invoice', $data);
-         $pdf = PDF::loadView('admin.processes.invoice', $data);
-         return $pdf->stream($name);
+        $pdf = PDF::loadView('admin.processes.invoice', $data);
+        return $pdf->stream($name);
     }
 
     public function exportAllToPdf()
@@ -302,7 +305,7 @@ class processesController extends Controller
         $name = time() . "_process.pdf";
         $data['processes'] = processe::with('seasonRelation', 'productRelation', 'typeRelation', 'sacksRelation', 'clientRelation', 'floorRelation', 'warehouseRelation')->get();
         $data['logo'] = setting::where(['key' => 'logo'])->first();
-        // return view('admin.processes.export_pdf', $data);
+        return view('admin.processes.export_pdf', $data);
         $pdf = PDF::loadView('admin.processes.export_pdf', $data);
         return $pdf->stream($name);
     }
@@ -363,6 +366,7 @@ class processesController extends Controller
         } else {
             return back()->withSuccess(trans('app.sms_message_failed'));
         }
-        return back()->withSuccess(trans('app.success_store'));
+        // return back()->withSuccess(trans('app.success_store'));
+        return back();
     }
 }
