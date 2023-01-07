@@ -293,9 +293,9 @@ class processesController extends Controller
         $data = [];
         $name = time() . "_process.pdf";
         $data['process'] = processe::with('seasonRelation', 'productRelation', 'typeRelation', 'sacksRelation', 'clientRelation', 'floorRelation', 'warehouseRelation')->first();
-        $data['logo'] = setting::where(['key' => 'logo'])->first();
-        // return view('admin.processes.invoice', $data);
-        $pdf = PDF::loadView('admin.processes.invoice', $data);
+        $logo = setting::where(['key' => 'logo'])->first();
+        // return view('admin.processes.invoice', compact('process' , 'logo'));
+        $pdf = PDF::loadView('admin.processes.invoice', $data , $logo);
         return $pdf->stream($name);
     }
 
@@ -304,9 +304,9 @@ class processesController extends Controller
         $data = [];
         $name = time() . "_process.pdf";
         $data['processes'] = processe::with('seasonRelation', 'productRelation', 'typeRelation', 'sacksRelation', 'clientRelation', 'floorRelation', 'warehouseRelation')->get();
-        $data['logo'] = setting::where(['key' => 'logo'])->first();
-        return view('admin.processes.export_pdf', $data);
-        $pdf = PDF::loadView('admin.processes.export_pdf', $data);
+        $logo = setting::where(['key' => 'logo'])->first();
+        // return view('admin.processes.export_pdf', $data , $logo);
+        $pdf = PDF::loadView('admin.processes.export_pdf', $data , $logo);
         return $pdf->stream($name);
     }
 
