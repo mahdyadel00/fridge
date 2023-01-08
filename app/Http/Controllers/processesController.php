@@ -296,7 +296,7 @@ class processesController extends Controller
         // $logo = setting::where(['key' => 'logo'])->first();
         $logo = setting::where("key" , "logo")->first();
         // return view('admin.processes.invoice', compact('process' , 'logo'));
-        $pdf = PDF::loadView('admin.processes.invoice', compact('process'));
+        $pdf = PDF::loadView('admin.processes.invoice', $data);
         return $pdf->stream($name);
     }
 
